@@ -1,4 +1,4 @@
-spike-bench
-===========
+Spike Engine Benchmark
+======================
 
-Benchmarking stress test project for Spike Engine.
+A simple benchmarking stress test project for Spike Engine.

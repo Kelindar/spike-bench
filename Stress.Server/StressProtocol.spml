@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Protocol Name="StressProtocol" xmlns="http://www.spike-engine.com/2011/spml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Operations>
+
+    <Operation Name="GetAll" Direction="Pull" SuppressSecurity="true">
+      <Outgoing>
+        <Member Name="Table" Type="ListOfComplexType" Class="Parameter">
+          <Member Name="Key" Type="String" />
+          <Member Name="Value" Type="DynamicType" />
+        </Member>
+      </Outgoing>
+    </Operation>
+
+    <Operation Name="Check" Direction="Pull" SuppressSecurity="true">
+      <Incoming>
+        <Member Name="Key" Type="String" />
+        <Member Name="Value" Type="DynamicType" />
+      </Incoming>
+      <Outgoing>
+        <Member Name="Success" Type="Boolean" />
+      </Outgoing>
+    </Operation>
+
+    <Operation Name="Get" Direction="Pull" SuppressSecurity="true">
+      <Incoming>
+        <Member Name="Key" Type="String" />
+      </Incoming>
+      <Outgoing>
+        <Member Name="Value" Type="DynamicType" />
+      </Outgoing>
+    </Operation>
+
+    <Operation Name="Event" Direction="Push" SuppressSecurity="true">
+      <Outgoing>
+        <Member Name="Message" Type="String" />
+        <Member Name="Time" Type="DateTime" />
+      </Outgoing>
+    </Operation>
+
+  </Operations>
+</Protocol>
