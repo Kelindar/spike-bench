@@ -24,7 +24,7 @@ namespace Stress.Client
 
             Server.EventInform += (s, e) => Console.WriteLine(e.Data.Message);
             Server.GetInform += (s, e) => Console.WriteLine("Got: {0}", e.Data.Value);
-            //Server.CheckInform += (s, e) => Console.WriteLine(e.Data.Success);
+            Server.CheckInform += (s, e) => Console.WriteLine(e.Data.Success);
 
             Server.GetAllInform += (s, e) =>
             {

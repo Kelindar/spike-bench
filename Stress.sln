@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.21901.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stress.Server", "Stress.Server\Stress.Server.csproj", "{23EF38F8-E915-417E-9940-BBD54DBB993F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stress.Client", "Stress.Client\Stress.Client.csproj", "{ECEF07E3-CA5E-402B-B520-BC57DD7C6668}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stress.CSharp5", "Stress.CSharp5\Stress.CSharp5.csproj", "{3BBCEB0C-91FE-41D8-B8F1-A739DCD50A30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{ECEF07E3-CA5E-402B-B520-BC57DD7C6668}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECEF07E3-CA5E-402B-B520-BC57DD7C6668}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECEF07E3-CA5E-402B-B520-BC57DD7C6668}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BBCEB0C-91FE-41D8-B8F1-A739DCD50A30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BBCEB0C-91FE-41D8-B8F1-A739DCD50A30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BBCEB0C-91FE-41D8-B8F1-A739DCD50A30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BBCEB0C-91FE-41D8-B8F1-A739DCD50A30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
