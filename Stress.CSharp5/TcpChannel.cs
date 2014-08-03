@@ -13,6 +13,10 @@ namespace Spike.Network
  
 		public class TcpChannel : TcpChannelBase<TcpChannel>
 	{
+		public TcpChannel(int bufferSize = 8096) : base(bufferSize)
+		{
+		}
+
 		//Events
 		
 		public event Action<TcpChannel, GetAllInform> GetAllInform; 
