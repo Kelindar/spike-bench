@@ -24,14 +24,14 @@ namespace Stress.WinRT
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public ObservableCollection<Message> _Messages = new ObservableCollection<Message>();
-        public ObservableCollection<Message> Messages { get { return _Messages; } }
+        public ObservableCollection<string> _Messages = new ObservableCollection<string>();
+        public ObservableCollection<string> Messages { get { return _Messages; } }
 
         public TcpChannel Server = new TcpChannel(100000);
 
         public void ConsoleWriteLine(string text)
         {
-            Messages.Add(new Message() { Text = text });
+            Messages.Add(text);
         }
 
         public MainPage()

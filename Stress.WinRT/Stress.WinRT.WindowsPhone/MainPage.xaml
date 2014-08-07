@@ -10,19 +10,13 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition ></ColumnDefinition>
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <ListView x:Name="ListViewMessage" Grid.ColumnSpan="2" ItemsSource="{Binding Messages}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Text}"></TextBlock>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <Button x:Name="ButtonConnection" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ButtonConnection_Click" Content="Connection" />
+        <ListBox x:Name="ListViewMessage" ItemsSource="{Binding Messages}" />
+        <Button x:Name="ButtonConnection" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ButtonConnection_Click" Content="Connection" />
     </Grid>
 </Page>

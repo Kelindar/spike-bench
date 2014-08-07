@@ -453,22 +453,29 @@ namespace Spike.Network
             }
         }
 
-		
+		public void Disconnect()
+        {
+			Disconnect(ConnectionError.User);
+		}
+
         private void Disconnect(ConnectionError error)
         {
-            var mustRaise = false;
-            lock (socket)
+            if (socket != null)
             {
-                if (!disposed)
+                var mustRaise = false;
+                lock (socket)
                 {
-                    mustRaise = true;
-                    disposed = true;
-                    socket.Dispose();                    
+                    if (!disposed)
+                    {
+                        mustRaise = true;
+                        disposed = true;
+                        socket.Dispose();
+                    }
                 }
-            }
 
-            if (mustRaise && Disconnected != null)
-                Disconnected((T)this, error);
+                if (mustRaise && Disconnected != null)
+                    Disconnected((T)this, error);
+            }
         }
 
         protected void BeginReadPacket(bool compressed)
