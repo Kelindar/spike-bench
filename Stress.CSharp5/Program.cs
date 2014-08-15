@@ -40,6 +40,7 @@ namespace Stress.CSharp5
 
             Console.WriteLine("Press any key to exit..");
             Console.ReadKey();
+            Server.Disconnect();
         }
     }
 }

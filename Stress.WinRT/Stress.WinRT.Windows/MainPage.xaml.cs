@@ -25,13 +25,14 @@ namespace Stress.WinRT
     public sealed partial class MainPage : Page
     {
 
-        public ObservableCollection<Message> _Messages = new ObservableCollection<Message>();
-        public ObservableCollection<Message> Messages { get { return _Messages; } }
+        public ObservableCollection<string> _Messages = new ObservableCollection<string>();
+        public ObservableCollection<string> Messages { get { return _Messages; } }
 
         public TcpChannel Server = new TcpChannel(100000);
 
-        public void ConsoleWriteLine(string text) {
-            Messages.Add(new Message() { Text = text });
+        public void ConsoleWriteLine(string text)
+        {
+            Messages.Add(text);
         }
 
         public MainPage()
@@ -42,12 +43,12 @@ namespace Stress.WinRT
             Server.EventInform += (sender, packet) => ConsoleWriteLine(packet.Message);
             Server.GetInform += (sender, packet) => ConsoleWriteLine(string.Format("Got: {0}", packet.Value));
             Server.CheckInform += (sender, packet) => ConsoleWriteLine(string.Format("Success: {0}", packet.Success));
-            
+
             Server.GetAllInform += async (sender, packet) =>
             {
                 ConsoleWriteLine("Test: Data Coherence Test...");
-                foreach (var entity in packet.Table)                
-                    await Server.Check(entity.Key, entity.Value);                
+                foreach (var entity in packet.Table)
+                    await Server.Check(entity.Key, entity.Value);
             };
 
             Server.Connected += async (sender) =>
@@ -61,11 +62,12 @@ namespace Stress.WinRT
                 ConsoleWriteLine(string.Format("Disconnected : {0}", error));
             };
         }
-                
+
         private async void ButtonConnection_Click(object sender, RoutedEventArgs e)
         {
             ButtonConnection.IsEnabled = false;
             await Server.Connect("127.0.0.1", 8002);
         }
+                
     }
 }
