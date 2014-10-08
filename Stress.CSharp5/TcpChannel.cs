@@ -1,10 +1,12 @@
 
 
 using System;
-using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.IO;
+using System.Net.Security;
+using System.Diagnostics;
 
 namespace Spike.Network
 {
@@ -13,7 +15,7 @@ namespace Spike.Network
  
 		public class TcpChannel : TcpChannelBase<TcpChannel>
 	{
-		public TcpChannel(int bufferSize = 8096) : base(bufferSize)
+		public TcpChannel(int bufferSize = 8096, bool useSSL=false) : base(bufferSize, useSSL)
 		{
 		}
 
