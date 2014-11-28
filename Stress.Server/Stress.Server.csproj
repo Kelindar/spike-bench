@@ -32,13 +32,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Spike.Runtime, Version=2.5.5442.28630, Culture=neutral, PublicKeyToken=bbbae3b375c299b6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SpikeEngine.2.5.5442.28630\lib\Spike.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Spike.Runtime">
-      <HintPath>..\Stress.Runtimes\v2.5\Spike.Runtime.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -53,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
     <None Include="StressProtocol.spml">
       <Generator>SpikeProtocolProcessor</Generator>
       <LastGenOutput>StressProtocol.cs</LastGenOutput>

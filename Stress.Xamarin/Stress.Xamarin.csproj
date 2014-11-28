@@ -47,14 +47,23 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CheckInform.cs" />
-    <Compile Include="CLZF.cs" />
-    <Compile Include="EventInform.cs" />
-    <Compile Include="GetAllInform.cs" />
-    <Compile Include="GetInform.cs" />
-    <Compile Include="Parameter.cs" />
-    <Compile Include="TcpChannel.cs" />
-    <Compile Include="TcpChannelBase.cs" />
+    <Compile Include="Network\CheckInform.cs" />
+    <Compile Include="Network\EventInform.cs" />
+    <Compile Include="Network\GetAllInform.cs" />
+    <Compile Include="Network\GetInform.cs" />
+    <Compile Include="Network\GetServerTimeInform.cs" />
+    <Compile Include="Network\HubEventInform.cs" />
+    <Compile Include="Network\HubPublishInform.cs" />
+    <Compile Include="Network\HubSubscribeInform.cs" />
+    <Compile Include="Network\HubUnsubscribeInform.cs" />
+    <Compile Include="Network\LZF.cs" />
+    <Compile Include="Network\PacketWriter.cs" />
+    <Compile Include="Network\Parameter.cs" />
+    <Compile Include="Network\PingInform.cs" />
+    <Compile Include="Network\RevokeCredentialsInform.cs" />
+    <Compile Include="Network\SupplyCredentialsInform.cs" />
+    <Compile Include="Network\TcpChannel.cs" />
+    <Compile Include="Network\TcpChannelBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -67,4 +76,7 @@
     <AndroidResource Include="Resources\drawable\Icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Network\" />
+  </ItemGroup>
 </Project>

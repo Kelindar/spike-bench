@@ -17,6 +17,8 @@
         <Member Name="Value" Type="DynamicType" />
       </Incoming>
       <Outgoing>
+        <Member Name="Key" Type="String" />
+        <Member Name="Value" Type="DynamicType" />
         <Member Name="Success" Type="Boolean" />
       </Outgoing>
     </Operation>

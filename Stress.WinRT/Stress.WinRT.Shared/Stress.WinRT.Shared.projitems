@@ -15,6 +15,23 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)SpikeSdk.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CheckInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GetAllInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GetInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GetServerTimeInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HubEventInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HubPublishInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HubSubscribeInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HubUnsubscribeInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LZF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PacketReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PacketWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parameter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PingInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RevokeCredentialsInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SupplyCredentialsInform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TcpChannel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TcpChannelBase.cs" />
   </ItemGroup>
 </Project>

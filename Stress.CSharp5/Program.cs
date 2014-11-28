@@ -15,8 +15,12 @@ namespace Stress.CSharp5
 
                         
             Server.EventInform += (sender, packet) => Console.WriteLine(packet.Message); 
-            Server.GetInform += (sender, packet) => Console.WriteLine("Got: {0}", packet.Value); 
-            Server.CheckInform += (sender, packet) => Console.WriteLine("Success: {0}", packet.Success); 
+            Server.GetInform += (sender, packet) => Console.WriteLine("Got: {0}", packet.Value);
+            Server.CheckInform += (sender, packet) =>
+            {
+                //if(!packet.Success)
+                    Console.WriteLine("[{0}] {1} => {2}", packet.Success ? "SUCCESS" : "FAIL", packet.Key, packet.Value);
+            };
 
             Server.GetAllInform += async (sender, packet) =>
             {

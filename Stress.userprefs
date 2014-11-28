@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.MonoForAndroid_API_12" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Stress.Xamarin\MainActivity.cs">
+    <Files>
+      <File FileName="Stress.Xamarin\MainActivity.cs" Line="36" Column="36" />
+      <File FileName="Stress.Xamarin\Network\GetInform.cs" Line="1" Column="1" />
+      <File FileName="Stress.Xamarin\Network\Parameter.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

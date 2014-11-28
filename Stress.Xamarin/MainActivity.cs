@@ -61,8 +61,8 @@ namespace Stress.Xamarin
 
 			SendButton.Click += async (sender, e) => {
 				SendButton.Activated = false;
-				await Server.Connect("10.0.0.5", 8002);
-				//await Server.Connect("127.0.0.1", 8002);
+				//await Server.Connect("10.0.0.5", 8002);
+				await Server.Connect("127.0.0.1", 8002);
 			};
 		}
 	}

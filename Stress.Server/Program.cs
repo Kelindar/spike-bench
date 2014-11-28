@@ -45,6 +45,8 @@ namespace Stress.Server
         {
             Console.WriteLine("Check {0}, {1}", packet.Key, packet.Value);
             client.SendCheckInform(
+                packet.Key, 
+                packet.Value,
                 Store.Check(packet.Key, packet.Value)
                 );
         }

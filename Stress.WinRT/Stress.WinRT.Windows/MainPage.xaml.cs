@@ -42,7 +42,7 @@ namespace Stress.WinRT
 
             Server.EventInform += (sender, packet) => ConsoleWriteLine(packet.Message);
             Server.GetInform += (sender, packet) => ConsoleWriteLine(string.Format("Got: {0}", packet.Value));
-            Server.CheckInform += (sender, packet) => ConsoleWriteLine(string.Format("Success: {0}", packet.Success));
+            Server.CheckInform += (sender, packet) => ConsoleWriteLine(string.Format("[{0}] {1} => {2}", packet.Success ? "SUCCESS" : "FAIL", packet.Key, packet.Value));
 
             Server.GetAllInform += async (sender, packet) =>
             {
