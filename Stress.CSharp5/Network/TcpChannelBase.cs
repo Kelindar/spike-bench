@@ -224,7 +224,7 @@ namespace Spike.Network
                     return;
                 }
 
-                // read packet data
+                //read packet data
                 this.Reader.Offset = 0;
                 this.Reader.Length = this.Reader.ReadInt32() + sizeof(int);
 
