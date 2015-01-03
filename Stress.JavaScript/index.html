@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Javascript</title>
+    <style>
+        html, body{ overflow: hidden;  margin:0; padding:0; }
+        ::selection { background: #eee8d5; }
+        ::-moz-selection { background: #eee8d5; }
+        .console {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100vw; 
+            height: 100vh;  
+            padding: 10px;
+            font-family:monospace;
+            background-color: #fdf6e3;
+            color: #586e75;
+            border: hidden;
+        }
+    </style>
+    <script src="spike-sdk.js"></script>
+</head>
+
+<body>
+    <textarea autocomplete="off" readonly class="console"></textarea>
+
+    <script>
+        var _logger = document.querySelector('textarea');
+        var _time = null, _fails = {};
+        var _fail = 0, _pass = 0, _events = 0;
+        function log(category, text) {
+
+            _logger.value += '[' + category + '] ' + text +
+                (_time == null ? ' @' + new Date().toLocaleTimeString() : ' +' + (new Date() - _time) + ' ms')
+                + '\n';
+            _time = new Date();
+        }
+
+        log('server', 'starting up...');
+        var server = new spike.Channel('ws://dev.spike-engine.com:8002');
+
+        server.on('connect', function (c) {
+            log('server', 'connected to ' + server.endPoint);
+            _fail = 0;
+            _pass = 0;
+            _events = 0;
+            _fails = {};
+            server.getServerTime();
+            server.getAll();
+        });
+
+        server.on('getServerTime', function (p) {
+            log('getServerTime', p.serverTime);
+        });
+
+        server.on('getAll', function (p) {
+            log('getAll', 'received ' + p.table.length + ' objects');
+            for (var i = 0; i < p.table.length; ++i) {
+                var kv = p.table[i];
+                //log('getAll', kv.key + ' = ' + kv.value);
+                //if (kv.key.indexOf("System.Byte") == 0)
+                    server.check(kv.key, kv.value);
+                
+            }
+
+            setTimeout(function () {
+                log('check', "passed " + _pass + " tests");
+                log('check', "failed " + _fail + " tests");
+                log('check', "events received: " + _events);
+                for (var type in _fails) {
+                    log('check', type + ' failed ' + _fails[type] + " tests");
+                }
+            }, 1000);
+        });
+
+        server.on('event', function (p) {
+            log('EVENT', p.message);
+            _events++;
+        });
+
+        server.on('check', function (p) {
+            if (p.success) _pass++;
+            else {
+                _fail++;
+                var type = p.key.split(':')[0];
+                if (typeof _fails[type] === 'undefined')
+                    _fails[type] = 0;
+                _fails[type] = _fails[type] + 1;
+            }
+        });
+
+
+    </script>
+</body>
+</html>

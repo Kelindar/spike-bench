@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Spike;
 using Spike.Network;
+using Spike.Diagnostics;
+using System.Diagnostics;
 
 namespace Stress.Server
 {
@@ -15,6 +17,10 @@ namespace Stress.Server
 
         static void Main(string[] args)
         {
+            /*NetTrace.Enabled = true;
+            NetTrace.Listeners.Add(new ConsoleTraceListener());
+            NetTrace.TraceFabric = true;
+            NetTrace.TraceSpike = true;*/
             Service.Listen(
                 new TcpBinding(IPAddress.Any, 8002)
                 );
@@ -43,11 +49,21 @@ namespace Stress.Server
 
         static void StressProtocol_Check(IClient client, CheckRequest packet)
         {
-            Console.WriteLine("Check {0}, {1}", packet.Key, packet.Value);
+            //Console.WriteLine("Check {0}, {1}", packet.Key, packet.Value);
+            object old;
+            var result = Store.TryCheck(packet.Key, packet.Value, out old);
+
+            if(!result){
+                client.SendEventInform(
+                    String.Format("[{0}] Failed to match ({1}) with ({2})", packet.Key, packet.Value, old),
+                    DateTime.Now
+                    );
+            }
+            
             client.SendCheckInform(
                 packet.Key, 
                 packet.Value,
-                Store.Check(packet.Key, packet.Value)
+                result
                 );
         }
 

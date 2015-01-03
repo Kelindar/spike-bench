@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spike;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,24 +58,40 @@ namespace Stress.Server
         /// </summary>
         /// <param name="key">The key to check.</param>
         /// <param name="value">The value to check.</param>
-        public bool Check(string key, object value)
+        public bool TryCheck(string key, object value, out object correct)
         {
-            object old;
-            if (!Store.TryGetValue(key, out old))
+            correct = null;
+            if (!Store.TryGetValue(key, out correct))
+                return false;
+
+            try
             {
-                // Notify no key
-                if (Notify != null)
-                    Notify(String.Format("[NO KEY] key: {0}", key));
+                if (correct is System.Byte)
+                    return Convert.ToByte(value) == Convert.ToByte(correct);
+                if (correct is System.Int16)
+                    return Convert.ToInt16(value) == Convert.ToInt16(correct);
+                if (correct is System.UInt16)
+                    return Convert.ToUInt16(value) == Convert.ToUInt16(correct);
+                if (correct is System.Int32)
+                    return Convert.ToInt32(value) == Convert.ToInt32(correct);
+                if (correct is System.UInt32)
+                    return Convert.ToUInt32(value) == Convert.ToUInt32(correct);
+                if (correct is System.Int64)
+                    return Convert.ToInt64(value) == Convert.ToInt64(correct);
+                if (correct is System.UInt64)
+                    return Convert.ToUInt64(value) == Convert.ToUInt64(correct);
+                if (correct is System.Single)
+                    return Math.Abs(Convert.ToSingle(value) - Convert.ToSingle(correct)) < 0.001;
+                if (correct is System.Double)
+                    return Math.Abs(Convert.ToDouble(value) - Convert.ToDouble(correct)) < 0.001;
+
+                return correct.Equals(value);
+            }
+            catch(Exception ex)
+            {
+                Service.Logger.Log(ex);
                 return false;
             }
-
-
-            if (old.Equals(value))
-                return true;
-            
-            if (Notify != null)
-                Notify(String.Format("[ERROR] key: {0}, found: {1}", key, old));
-            return false;
         }
 
         /// <summary>
