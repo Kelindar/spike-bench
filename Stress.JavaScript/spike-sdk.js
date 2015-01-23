@@ -4,7 +4,8 @@
 	spike = new Object();
 
 // Whether we should or not use native binary support
-spike.binarySupport =  ((typeof Uint8Array !== 'undefined') && (typeof DataView !== 'undefined'));
+//spike.binarySupport = ((typeof Uint8Array !== 'undefined') && (typeof DataView !== 'undefined'));
+spike.binarySupport = false;
 spike.ByteArray = function(){
 	this.position = 0;
 	this.bigEndian = true;
@@ -199,10 +200,11 @@ with({p: spike.ByteArray.prototype}){
 	
 	/* Writes a series of hex bytes and presents it as a 0x.. formatted string */
 	p.write64 = function(hex){
-		if(hex.indexOf('-64x') != 0 && hex.indexOf('+64x') != 0)
-			throw new Error('UInt64 or Int16 must start with +64x or -64x');
 		if(hex.length != 20)
 			throw new Error('UInt64 or Int16 must be a string of exactly 20 bytes');
+		var type = hex.substring(0, 4);
+		if(type != '-64x' && type != '+64x')
+			throw new Error('UInt64 or Int16 must start with +64x or -64x');
 		
 		hex = hex.slice(4);
 		for (var i = 0; i < 16; i+=2){
@@ -518,7 +520,6 @@ with({p: spike.ByteArray.prototype}){
 		this.bigEndian = bigEndian || 0, this.buffer = [], this.setBuffer(buffer);
 	}).prototype}){
 		p.readBits = function(start, length){
-			//shl fix: Henri Torgemane ~1996 (compressed by Jonas Raoni)
 			function shl(a, b){
 				for(++b; --b; a = ((a %= 0x7fffffff + 1) & 0x40000000) == 0x40000000 ? a * 2 : (a - 0x40000000) * 2 + 0x7fffffff + 1);
 				return a;
@@ -942,41 +943,57 @@ spike.PacketWriter.prototype.writeDynamicType = function(value){
 
 		this.writeString("Double");
 		this.writeDouble(value);
+		return;
 	}
 	else if(type == "boolean")
 	{
 		this.writeByte(1);
 		this.writeString("Boolean");
 		this.writeBoolean(value);
+		return;
 	}
 	else if(type == "string")
 	{
-		this.writeByte(1);
-		if(value.indexOf('+64x' == 0) && value.length == 20)
+		if (value.length == 20)
 		{
-			this.writeString("UInt64");
-			this.writeUInt64(value);
-		}
-		else if(value.indexOf('-64x' == 0) && value.length == 20)
-		{
-			this.writeString("Int64");
-			this.writeInt64(value);
+			if (value.substring(0, 4) == '+64x')
+			{
+				this.writeByte(1);
+				this.writeString("UInt64");
+				this.writeUInt64(value);
+				return;
+			}
+			else if(value.substring(0, 4) == '-64x')
+			{
+				this.writeByte(1);
+				this.writeString("Int64");
+				this.writeInt64(value);
+				return;
+			}
+
 		}
 		else
 		{
+			this.writeByte(1);
 			this.writeString("String");
 			this.writeString(value);
+			return;
 		}
+
+		this.writeByte(0);
+		return;
 	}
 	else if(type == "object" && value instanceof Date)
 	{
 		this.writeByte(1);
 		this.writeString("DateTime");
 		this.writeDateTime(value);
+		return;
 	}
 	else
 	{
 		this.writeByte(0);
+		return;
 	}
 }
 
@@ -1864,7 +1881,7 @@ Socket.prototype.onOpen = function () {
 
 Socket.prototype.onPacket = function (packet) {
   if ('opening' == this.readyState || 'open' == this.readyState) {
-    debug('socket receive: type "%s", data "%s"', packet.type, packet.data);
+    //debug('socket receive: type "%s", data "%s"', packet.type, packet.data);
 
     this.emit('packet', packet);
 
@@ -1999,7 +2016,7 @@ Socket.prototype.onDrain = function() {
 Socket.prototype.flush = function () {
   if ('closed' != this.readyState && this.transport.writable &&
     !this.upgrading && this.writeBuffer.length) {
-    debug('flushing %d packets in socket', this.writeBuffer.length);
+    //debug('flushing %d packets in socket', this.writeBuffer.length);
     this.transport.send(this.writeBuffer);
     // keep track of current length of writeBuffer
     // splice writeBuffer and callbackBuffer on `drain`
@@ -5388,6 +5405,9 @@ if (WebSocket) ws.prototype = WebSocket.prototype;
 
 	// Event: occurs when the client is disconnected from the server.
 	this.onDisconnect = null;
+	// Event: occurs when the MyChatMessagesInform inform is received from the server. 
+	this.myChatMessagesInform = null; 
+
 	// Event: occurs when the GetAllInform inform is received from the server. 
 	this.getAllInform = null; 
 
@@ -5430,6 +5450,25 @@ if (WebSocket) ws.prototype = WebSocket.prototype;
 };
 		    
 	// Send Methods    
+	/* Sends a JoinMyChat request to the remote server. */	
+spike.Channel.prototype.joinMyChat = function(){
+		
+	var writer = new spike.PacketWriter();
+		
+	
+	this.send("84157E5C", writer);
+};
+
+	/* Sends a SendMyChatMessage request to the remote server. */	
+spike.Channel.prototype.sendMyChatMessage = function(message){
+		
+	var writer = new spike.PacketWriter();
+	writer.writeString(message);
+		
+	writer.compress();
+	this.send("BD7E2CA4", writer);
+};
+
 	/* Sends a GetAll request to the remote server. */	
 spike.Channel.prototype.getAll = function(){
 		
@@ -5541,6 +5580,21 @@ spike.Channel.prototype.hubPublish = function(hubName, publishKey, message){
 // Dispatcher
 spike.Channel.prototype.onReceive = function(key, reader){
 	switch (key){
+			
+		// MyChatMessagesInform 	
+		case "F6F85E84": {
+			reader.decompress();
+			var packet = new Object();
+			packet.avatar = reader.readArrayOfByte();
+			packet.message = reader.readString();
+
+			if (this.myChatMessagesInform != null)
+				this.myChatMessagesInform(packet, this);
+			this.emit('myChatMessagesInform', packet);
+			this.emit('myChatMessages', packet);
+
+		} break;
+
 			
 		// GetAllInform 	
 		case "B22E7270": {
@@ -5844,15 +5898,23 @@ spike.Channel.prototype.connect = function(fn){
 		var channel = this._channel;
 		if (channel._partialRecord)
 		{
-			channel.buffer.readBytesTo(data, socket.buffer.getSize());
+			channel.buffer.readBytesTo(data, channel.buffer.getSize());
 			channel._partialRecord = false;
 		}			
 
-		spike.debug('Received buffer: %s', payload);
+		//spike.debug('Received buffer: %s', payload);
 
 		// Read received data and reset (SEEK)
-		if ((typeof payload) == 'string') data.writeBase64(payload);
-		else data.writeBytes(new Uint8Array(payload));
+		if ((typeof payload) == 'string') {
+			data.writeBase64(payload);
+		} else if(spike.binarySupport) {
+			data.writeBytes(new Uint8Array(payload));
+		} else {
+			var buff = new Uint8Array(payload);
+			for(var i=0; i<buff.byteLength; ++i)
+				data.writeByte(buff[i]);
+		}
+		
 		data.position = 0;
 		
 		// While we have data to read
@@ -5862,7 +5924,7 @@ spike.Channel.prototype.connect = function(fn){
 			{
 				// Read the partial packet 
 				channel.buffer = new spike.ByteArray();
-				data.readBytesTo(socket.buffer, data.getSize() - data.position);
+				data.readBytesTo(channel.buffer, data.getSize() - data.position);
 				channel._partialRecord = true;
 				break;
 			} 
@@ -5885,7 +5947,7 @@ spike.Channel.prototype.connect = function(fn){
 					operation += sbyte;
 				}
 				operation = operation.toUpperCase();
-				spike.debug('Operation #%s received', operation);
+				//spike.debug('Operation #%s received', operation);
 
 				// New buffer for the packet
 				var packet = new spike.ByteArray();
@@ -5901,7 +5963,7 @@ spike.Channel.prototype.connect = function(fn){
 		    {
 		     	// Read the partial packet
 				channel.buffer = new spike.ByteArray();
-				data.readBytesTo(socket.buffer, data.getSize() - data.position);
+				data.readBytesTo(channel.buffer, data.getSize() - data.position);
 				channel._partialRecord = true;
 		    }
 		
